@@ -19,8 +19,11 @@ given(X,Y) :- initial(X,Y,_).
 % Prefill initial values
 sudoku(X,Y,N) :- initial(X,Y,N).
 
-% Subgrid mapping for 4x4 board
-subgrid(X,Y,1) :- row(X), col(Y), X <= 2, Y <= 2.
-subgrid(X,Y,2) :- row(X), col(Y), X <= 2, Y > 2.
-subgrid(X,Y,3) :- row(X), col(Y), X > 2, Y <= 2.
-subgrid(X,Y,4) :- row(X), col(Y), X > 2, Y > 2.
+% Subgrid mapping for all 4x4 cells
+subgrid(X,Y,1) :- cell(X,Y), X <= 2, Y <= 2.
+subgrid(X,Y,2) :- cell(X,Y), X <= 2, Y > 2.
+subgrid(X,Y,3) :- cell(X,Y), X > 2, Y <= 2.
+subgrid(X,Y,4) :- cell(X,Y), X > 2, Y > 2.
+
+#show sudoku/3.
+#show subgrid/3.
