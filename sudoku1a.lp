@@ -1,17 +1,21 @@
-% Sudoku 4x4 — Question 1a
-% Numbers and grid
-num(1..4).
+% sudoku1a.lp  -- 4x4 Latin square constraints (rows/cols), respecting initial/3.
+
 row(1..4).
 col(1..4).
+num(1..4).
 
-% Each cell must have exactly one number
-1 { sudoku(X,Y,N) : num(N) } 1 :- row(X), col(Y).
+cell(X,Y) :- row(X), col(Y).
 
-% Rows contain unique numbers
-:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 != Y2.
+given(X,Y) :- initial(X,Y,_).
 
-% Columns contain unique numbers
-:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 != X2.
-
-% Include any given initial numbers
+% Prefill givens
 sudoku(X,Y,N) :- initial(X,Y,N).
+
+% Fill the remaining cells with exactly one number
+1 { sudoku(X,Y,N) : num(N) } 1 :- cell(X,Y), not given(X,Y).
+
+% Row uniqueness: same number can't repeat in a row
+:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 < Y2.
+
+% Column uniqueness: same number can't repeat in a column
+:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 < X2.
