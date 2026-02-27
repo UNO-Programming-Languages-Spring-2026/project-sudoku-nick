@@ -1,19 +1,22 @@
-% 4x4 Sudoku — Question 1a (rows and columns only)
-num(1..4).
+% sudoku1a.lp -- 4x4 Sudoku: rows and columns only
+
 row(1..4).
 col(1..4).
+num(1..4).
 
-% Fill each cell with exactly one number
-sudoku(X,Y,N) :- row(X), col(Y), num(N), not other_num(X,Y,N).
-other_num(X,Y,N) :- sudoku(X,Y,M), M != N.
+cell(X,Y) :- row(X), col(Y).
+given(X,Y) :- initial(X,Y,_).
 
-% Rows must have unique numbers
-:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 != Y2.
+% Fill remaining cells
+1 { sudoku(X,Y,N) : num(N) } 1 :- cell(X,Y), not given(X,Y).
 
-% Columns must have unique numbers
-:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 != X2.
+% Rows unique
+:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 < Y2.
 
-% Include initial numbers
+% Columns unique
+:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 < X2.
+
+% Prefill initial values
 sudoku(X,Y,N) :- initial(X,Y,N).
 
 #show sudoku/3.
