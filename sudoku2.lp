@@ -1,7 +1,7 @@
-% Sudoku 9x9 — Question 2
-num(1..9).
-row(1..9).
-col(1..9).
+% Sudoku 4x4 — Question 1c
+num(1..4).
+row(1..4).
+col(1..4).
 
 1 { sudoku(X,Y,N) : num(N) } 1 :- row(X), col(Y).
 
@@ -14,18 +14,14 @@ col(1..9).
 % Include any given initial numbers
 sudoku(X,Y,N) :- initial(X,Y,N).
 
-% 3x3 subgrid mapping
-subgrid(X,Y,1) :- X<=3, Y<=3.
-subgrid(X,Y,2) :- X<=3, Y>3, Y<=6.
-subgrid(X,Y,3) :- X<=3, Y>6.
-subgrid(X,Y,4) :- X>3, X<=6, Y<=3.
-subgrid(X,Y,5) :- X>3, X<=6, Y>3, Y<=6.
-subgrid(X,Y,6) :- X>3, X<=6, Y>6.
-subgrid(X,Y,7) :- X>6, Y<=3.
-subgrid(X,Y,8) :- X>6, Y>3, Y<=6.
-subgrid(X,Y,9) :- X>6, Y>6.
+% Subgrid mapping
+subgrid(X,Y,1) :- X <= 2, Y <= 2.
+subgrid(X,Y,2) :- X <= 2, Y > 2.
+subgrid(X,Y,3) :- X > 2, Y <= 2.
+subgrid(X,Y,4) :- X > 2, Y > 2.
 
 % Numbers in each subgrid must be unique
 :- sudoku(X1,Y1,N), sudoku(X2,Y2,N), subgrid(X1,Y1,G), subgrid(X2,Y2,G), (X1,Y1) != (X2,Y2).
 
+% Show only the solution
 #show sudoku/3.
