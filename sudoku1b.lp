@@ -1,23 +1,14 @@
-% Sudoku 4x4 — Question 1b
-% Numbers and grid
-num(1..4).
+% sudoku1b.lp -- define subgrid/3 for 4x4 (2x2 blocks), plus keep 1a if you want.
+
 row(1..4).
 col(1..4).
+cell(X,Y) :- row(X), col(Y).
 
-% Each cell must have exactly one number
-1 { sudoku(X,Y,N) : num(N) } 1 :- row(X), col(Y).
+% Compute block coordinates (0 or 1) using integer division
+bx(X,BX) :- row(X), BX = (X-1) / 2.
+by(Y,BY) :- col(Y), BY = (Y-1) / 2.
 
-% Rows contain unique numbers
-:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 != Y2.
+% Subgrid id: G = 2*BX + BY + 1  -> values 1..4
+subgrid(X,Y,G) :- cell(X,Y), bx(X,BX), by(Y,BY), G = 2*BX + BY + 1.
 
-% Columns contain unique numbers
-:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 != X2.
-
-% Include any given initial numbers
-sudoku(X,Y,N) :- initial(X,Y,N).
-
-% Subgrid mapping (4 subgrids)
-subgrid(X,Y,1) :- X <= 2, Y <= 2.
-subgrid(X,Y,2) :- X <= 2, Y > 2.
-subgrid(X,Y,3) :- X > 2, Y <= 2.
-subgrid(X,Y,4) :- X > 2, Y > 2.
+#show subgrid/3.
