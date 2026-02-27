@@ -1,32 +1,27 @@
-% sudoku1c.lp -- full 4x4 sudoku: rows/cols/subgrids, respecting initial/3.
-
+% Sudoku 4x4 — Question 1c
+num(1..4).
 row(1..4).
 col(1..4).
-num(1..4).
 
-cell(X,Y) :- row(X), col(Y).
-given(X,Y) :- initial(X,Y,_).
+1 { sudoku(X,Y,N) : num(N) } 1 :- row(X), col(Y).
 
-% Subgrid mapping (2x2 blocks)
-bx(X,BX) :- row(X), BX = (X-1) / 2.
-by(Y,BY) :- col(Y), BY = (Y-1) / 2.
-subgrid(X,Y,G) :- cell(X,Y), bx(X,BX), by(Y,BY), G = 2*BX + BY + 1.
+% Rows contain unique numbers
+:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 != Y2.
 
-% Prefill givens
+% Columns contain unique numbers
+:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 != X2.
+
+% Include any given initial numbers
 sudoku(X,Y,N) :- initial(X,Y,N).
 
-% Fill remaining cells
-1 { sudoku(X,Y,N) : num(N) } 1 :- cell(X,Y), not given(X,Y).
+% Subgrid mapping
+subgrid(X,Y,1) :- X <= 2, Y <= 2.
+subgrid(X,Y,2) :- X <= 2, Y > 2.
+subgrid(X,Y,3) :- X > 2, Y <= 2.
+subgrid(X,Y,4) :- X > 2, Y > 2.
 
-% Row uniqueness
-:- sudoku(X,Y1,N), sudoku(X,Y2,N), Y1 < Y2.
+% Numbers in each subgrid must be unique
+:- sudoku(X1,Y1,N), sudoku(X2,Y2,N), subgrid(X1,Y1,G), subgrid(X2,Y2,G), (X1,Y1) != (X2,Y2).
 
-% Column uniqueness
-:- sudoku(X1,Y,N), sudoku(X2,Y,N), X1 < X2.
-
-% Subgrid uniqueness
-:- subgrid(X1,Y1,G), subgrid(X2,Y2,G),
-   sudoku(X1,Y1,N), sudoku(X2,Y2,N),
-   (X1,Y1) < (X2,Y2).
-
+% Show only the solution
 #show sudoku/3.
